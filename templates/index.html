@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Media Downloader</title>
+    <style>
+        :root {
+            --primary-color: #ff4500;
+            --secondary-color: #0079d3;
+            --background-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #1c1c1c;
+            --border-color: #ddd;
+            --error-color: #ff5864;
+            --success-color: #46d160;
+            --warning-color: #ffb800;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            background-color: var(--card-color);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #e03c00;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .secondary-btn {
+            background-color: var(--secondary-color);
+        }
+        
+        .secondary-btn:hover {
+            background-color: #0066b3;
+        }
+        
+        .progress {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-inner {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+        
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .media-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .media-item.nsfw {
+            border-color: var(--warning-color);
+        }
+        
+        .media-thumbnail {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+        
+        .video-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .nsfw-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--warning-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .media-info {
+            padding: 12px;
+        }
+        
+        .media-title {
+            font-size: 14px;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .error {
+            background-color: rgba(255, 88, 100, 0.1);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+        
+        .success {
+            background-color: rgba(70, 209, 96, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+        
+        .warning {
+            background-color: rgba(255, 184, 0, 0.1);
+            border: 1px solid var(--warning-color);
+            color: var(--warning-color);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .media-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reddit Media Downloader</h1>
+        <p class="subtitle">Download images and videos from any Reddit user's posts</p>
+        
+        <div class="form-group">
+            <label for="username">Reddit Username:</label>
+            <input type="text" id="username" placeholder="Enter Reddit username (without u/)" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="limit">Number of Posts to Check (max 1000):</label>
+            <input type="number" id="limit" value="100" min="1" max="1000">
+        </div>
+        
+        <div class="form-group">
+            <label for="contentType">Content Type:</label>
+            <select id="contentType">
+                <option value="all">All Media</option>
+                <option value="images">Images Only</option>
+                <option value="videos">Videos Only</option>
+            </select>
+        </div>
+        
+        <div class="checkbox-group">
+            <input type="checkbox" id="includeNsfw">
+            <label for="includeNsfw">Include NSFW content</label>
+        </div>
+        
+        <button id="fetchBtn">Fetch Media</button>
+        
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="progressBar"></div>
+            </div>
+            <div id="progressText">Processing...</div>
+        </div>
+        
+        <div class="message error" id="error" style="display: none;"></div>
+        <div class="message success" id="success" style="display: none;"></div>
+        <div class="message warning" id="warning" style="display: none;"></div>
+        
+        <div class="results" id="results">
+            <h2>Media Found</h2>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">Total Media</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="imagesCount">0</div>
+                    <div class="stat-label">Images</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="videosCount">0</div>
+                    <div class="stat-label">Videos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="nsfwCount">0</div>
+                    <div class="stat-label">NSFW</div>
+                </div>
+            </div>
+            
+            <div class="media-grid" id="mediaGrid"></div>
+            
+            <button id="downloadBtn" class="secondary-btn">Download All as ZIP</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameInput = document.getElementById('username');
+            const limitInput = document.getElementById('limit');
+            const contentTypeSelect = document.getElementById('contentType');
+            const includeNsfwCheckbox = document.getElementById('includeNsfw');
+            const fetchBtn = document.getElementById('fetchBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const progress = document.getElementById('progress');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const errorDiv = document.getElementById('error');
+            const successDiv = document.getElementById('success');
+            const warningDiv = document.getElementById('warning');
+            const resultsDiv = document.getElementById('results');
+            const mediaGrid = document.getElementById('mediaGrid');
+            const totalCount = document.getElementById('totalCount');
+            const imagesCount = document.getElementById('imagesCount');
+            const videosCount = document.getElementById('videosCount');
+            const nsfwCount = document.getElementById('nsfwCount');
+            
+            let mediaUrls = [];
+            
+            fetchBtn.addEventListener('click', fetchMedia);
+            downloadBtn.addEventListener('click', downloadMedia);
+            
+            function fetchMedia() {
+                const username = usernameInput.value.trim();
+                const limit = parseInt(limitInput.value);
+                const contentType = contentTypeSelect.value;
+                const includeNsfw = includeNsfwCheckbox.checked;
+                
+                if (!username) {
+                    showError('Please enter a username');
+                    return;
+                }
+                
+                // Reset UI
+                hideMessages();
+                resultsDiv.style.display = 'none';
+                progress.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressText.textContent = 'Fetching media...';
+                fetchBtn.disabled = true;
+                
+                // Make API request
+                fetch('/fetch_media', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        limit: limit,
+                        content_type: contentType,
+                        include_nsfw: includeNsfw
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                        return;
+                    }
+                    
+                    mediaUrls = data.media_urls || [];
+                    
+                    // Update stats
+                    updateStats(mediaUrls);
+                    
+                    // Display media grid
+                    displayMediaGrid(mediaUrls);
+                    
+                    resultsDiv.style.display = 'block';
+                    progress.style.display = 'none';
+                    fetchBtn.disabled = false;
+                    
+                    if (mediaUrls.length === 0) {
+                        showWarning('No media found for this user with the current filters');
+                    } else {
+                        showSuccess(`Found ${mediaUrls.length} media items`);
+                    }
+                })
+                .catch(error => {
+                    showError('Error fetching media: ' + error.message);
+                    progress.style.display = 'none';
+                    fetchBtn.disabled = false;
+                });
+            }
+            
+            function updateStats(media) {
+                totalCount.textContent = media.length;
+                
+                const images = media.filter(m => m.type === 'image').length;
+                const videos = media.filter(m => m.type === 'video' || m.type === 'gif').length;
+                const nsfw = media.filter(m => m.nsfw).length;
+                
+                imagesCount.textContent = images;
+                videosCount.textContent = videos;
+                nsfwCount.textContent = nsfw;
+            }
+            
+            function displayMediaGrid(media) {
+                mediaGrid.innerHTML = '';
+                
+                media.forEach(item => {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = `media-item ${item.nsfw ? 'nsfw' : ''}`;
+                    
+                    let thumbnailContent = '';
+                    if (item.type === 'image') {
+                        thumbnailContent = `<img src="${item.url}" alt="${item.title}" class="media-thumbnail" onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'media-thumbnail\'>Image failed to load</div>';">`;
+                    } else if (item.type === 'video' || item.type === 'gif') {
+                        thumbnailContent = `<div class="media-thumbnail">Video content</div>`;
+                    } else {
+                        thumbnailContent = `<div class="media-thumbnail">Unsupported content</div>`;
+                    }
+                    
+                    mediaItem.innerHTML = `
+                        ${thumbnailContent}
+                        ${item.type === 'video' || item.type === 'gif' ? '<div class="video-indicator">VIDEO</div>' : ''}
+                        ${item.nsfw ? '<div class="nsfw-indicator">NSFW</div>' : ''}
+                        <div class="media-info">
+                            <p class="media-title">${item.title}</p>
+                        </div>
+                    `;
+                    
+                    mediaGrid.appendChild(mediaItem);
+                });
+            }
+            
+            function downloadMedia() {
+                const username = usernameInput.value.trim();
+                
+                if (mediaUrls.length === 0) {
+                    showError('No media to download');
+                    return;
+                }
+                
+                // Reset UI
+                hideMessages();
+                progress.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressText.textContent = 'Preparing download...';
+                downloadBtn.disabled = true;
+                
+                // Make API request
+                fetch('/download_media', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        media_urls: mediaUrls
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                        return;
+                    }
+                    
+                    progressText.textContent = 'Download ready!';
+                    progressBar.style.width = '100%';
+                    
+                    // Download the zip file
+                    setTimeout(() => {
+                        window.location.href = `/download_zip/${data.zip_file}`;
+                        progress.style.display = 'none';
+                        downloadBtn.disabled = false;
+                        showSuccess(`Downloaded ${data.downloaded_count} files`);
+                    }, 1000);
+                })
+                .catch(error => {
+                    showError('Error downloading media: ' + error.message);
+                    progress.style.display = 'none';
+                    downloadBtn.disabled = false;
+                });
+            }
+            
+            function showError(message) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+            
+            function showSuccess(message) {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+            }
+            
+            function showWarning(message) {
+                warningDiv.textContent = message;
+                warningDiv.style.display = 'block';
+            }
+            
+            function hideMessages() {
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+                warningDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
