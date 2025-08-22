@@ -1,10 +1,15 @@
-# Reddit Media Downloader
+# Reddit Media Downloader V1.1 
 
 A browser-based tool to download media from Reddit users with a modern, responsive interface.
 
 ![Reddit](https://img.shields.io/badge/Reddit-Media%2520Downloader-orange)
 ![Python](https://img.shields.io/badge/Python-3.8%252B-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.0%252B-lightgrey)
+
+## Screenshot
+
+[![light.png](https://i.postimg.cc/Fs3KQ7fk/light.png)](https://postimg.cc/D8fhrfP7)
+[![dark.png](https://i.postimg.cc/MZhG4yG8/dark.png)](https://postimg.cc/Z0xZvv3f)
 
 ## 📋 Overview
 Reddit Media Downloader is a Python Flask application that allows users to download images and videos from any Reddit user's posts. It features a modern glass-morphism UI with dark mode support, bulk downloading capabilities, and filtering options.
@@ -125,4 +130,4 @@ Open an issue on the GitHub repository for questions or issues.
 
 **Note:** Developed by an enthusiastic learner without formal coding education. Feedback and contributions are welcome!
 
-Enjoy using the Reddit Media Downloader!
+Enjoy using the Reddit Media Downloader V1.1!
