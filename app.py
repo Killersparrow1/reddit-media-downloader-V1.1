@@ -20,9 +20,9 @@ DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 # Reddit API configuration (you'll need to get these from https://www.reddit.com/prefs/apps)
-REDDIT_CLIENT_ID = "V_-2uWSGNG2dVUxCnxNkag"
-REDDIT_CLIENT_SECRET = "TEFKG83C-tHPj6jr0Vh6shPNIY59MQ"
-REDDIT_USER_AGENT = "RedditMediaDownloader/1.0 by Jeonmission"
+REDDIT_CLIENT_ID = "personal use script"
+REDDIT_CLIENT_SECRET = "secret"
+REDDIT_USER_AGENT = "RedditMediaDownloader/1.0 by u/Jeonmission"
 
 # Initialize Reddit instance
 try:
