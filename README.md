@@ -8,8 +8,8 @@ A browser-based tool to download media from Reddit users with a modern, responsi
 
 ## Screenshot
 
-[![light-Edit.png](https://i.postimg.cc/bwqqcLc4/light-Edit.png)](https://postimg.cc/N5C3R60x)
-[![dark-Edit.png](https://i.postimg.cc/WbGsHCKM/dark-Edit.png)](https://postimg.cc/1fzxgCyt)
+[![light-Edit-Edit.png](https://i.postimg.cc/KjXRnLkF/light-Edit-Edit.png)](https://postimg.cc/9Rpm2DYN)
+[![dark-Edit-Edit.png](https://i.postimg.cc/14h5qZdz/dark-Edit-Edit.png)](https://postimg.cc/wR2dCngK)
 
 ## 📋 Overview
 Reddit Media Downloader is a Python Flask application that allows users to download images and videos from any Reddit user's posts. It features a modern glass-morphism UI with dark mode support, bulk downloading capabilities, and filtering options.
