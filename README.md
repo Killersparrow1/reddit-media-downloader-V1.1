@@ -10,7 +10,7 @@ A browser-based tool to download media from Reddit users with a modern, responsi
 
 [![light-Edit-Edit.png](https://i.postimg.cc/KjXRnLkF/light-Edit-Edit.png)](https://postimg.cc/9Rpm2DYN)
 [![dark-Edit-Edit.png](https://i.postimg.cc/14h5qZdz/dark-Edit-Edit.png)](https://postimg.cc/wR2dCngK)
-"The application includes functionality to filter and handle NSFW (Not Safe For Work) content, with appropriate user controls and warnings. Screenshots demonstrating this capability are included solely for the purpose of showcasing the application's complete feature set in a technical context."
+"The application includes features to filter and manage NSFW (Not Safe for Work) content, with clear user controls and warning mechanisms. Screenshots demonstrating this functionality are provided solely to illustrate the application’s full technical capabilities. The included images were intentionally shared by the respective artist/model as part of their work, and no personal identifiers such as names or faces have been disclosed, ensuring privacy and professionalism."
 
 ## 📋 Overview
 Reddit Media Downloader is a Python Flask application that allows users to download images and videos from any Reddit user's posts. It features a modern glass-morphism UI with dark mode support, bulk downloading capabilities, and filtering options.
